@@ -1,4 +1,6 @@
 --- @class Time
+--- An immutable Time with hour, minute and seconds.
+--- The components can be read through `hour`, `min` and `sec`, but cannot be changed.
 --- @field hour integer              The hour of the time. Goes from 0 to 23
 --- @field min  integer              The minute of the time. Goes from 0 to 59
 --- @field sec  integer              The second of the time. Goes from 0 to 59
@@ -144,6 +146,12 @@ function Time:__le(time)
   end
 
   return false
+end
+
+--- Convert a time to string using ISO Formatting. Intended use is debugging
+--- @return string
+function Time:__tostring()
+  return self:format();
 end
 
 -----------------------------------------------------------

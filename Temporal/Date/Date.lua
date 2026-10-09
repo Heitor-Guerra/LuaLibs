@@ -1,4 +1,6 @@
 --- @class Date
+--- An immutable Date with year, month and day.
+--- The components can be read through `year`, `month` and `day`, but cannot be changed.
 --- @field year integer         The year of the date. Can be any Gregorian year
 --- @field month integer        The month of the date. Goes from 1 to 12
 --- @field day integer          The day of the date. Goes from 1 to 31
@@ -187,6 +189,12 @@ function Date:__le(date)
   end
 
   return false
+end
+
+--- Convert a date to string using ISO Formatting. Intended use is debugging
+--- @return string
+function Date:__tostring()
+  return self:format();
 end
 
 -----------------------------------------------------------

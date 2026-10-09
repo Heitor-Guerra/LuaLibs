@@ -1,8 +1,8 @@
 --- @class Complex
 --- An immutable complex number with real and imaginary components.
 --- The components can be read through `real` and `imaginary`, but cannot be changed.
---- @field private real number
---- @field private imaginary number
+--- @field real number
+--- @field imaginary number
 Complex = {}
 Complex.__index = function(self, key)
   if key == "real" then
