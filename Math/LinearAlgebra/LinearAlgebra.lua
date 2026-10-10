@@ -327,6 +327,69 @@ function Matrix:determinant()
     return det
 end
 
+--- Calculate the inverse of this square matrix.
+--- @return Matrix
+function Matrix:inverse()
+    assert(self.rows == self.cols, "Inverse requires a square matrix")
+
+    local n = self.rows
+    local a = {}
+    local tolerance = 2e-15 * n
+
+    for i = 1, n do
+        a[i] = {}
+        for j = 1, n do
+            a[i][j] = self.data[i][j]
+            a[i][n + j] = (i == j) and 1 or 0
+        end
+    end
+
+    for col = 1, n do
+        local pivotRow = col
+        local largest = math.abs(a[col][col])
+
+        for i = col + 1, n do
+            local value = math.abs(a[i][col])
+            if value > largest then
+                largest = value
+                pivotRow = i
+            end
+        end
+
+        if largest <= tolerance then
+            error("Matrix is singular or numerically singular")
+        end
+
+        if pivotRow ~= col then
+            a[col], a[pivotRow] = a[pivotRow], a[col]
+        end
+
+        local pivot = a[col][col]
+        for j = 1, 2 * n do
+            a[col][j] = a[col][j] / pivot
+        end
+
+        for i = 1, n do
+            if i ~= col then
+                local factor = a[i][col]
+                for j = 1, 2 * n do
+                    a[i][j] = a[i][j] - factor * a[col][j]
+                end
+            end
+        end
+    end
+
+    local inverseData = {}
+    for i = 1, n do
+        inverseData[i] = {}
+        for j = 1, n do
+            inverseData[i][j] = a[i][n + j]
+        end
+    end
+
+    return Matrix.new(inverseData)
+end
+
 -----------------------------------------------------------
 
 -----------------------------------------------------------
