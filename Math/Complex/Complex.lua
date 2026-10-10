@@ -133,6 +133,15 @@ function Complex:modulus()
   return math.sqrt(self.real ^ 2 + self.imaginary ^ 2);
 end
 
+--- Return the phase of the complex number
+--- @return number
+function Complex:phase()
+  if self.real == 0 then
+    return math.pi / 2
+  end
+  return math.atan(self.imaginary / self.real);
+end
+
 --- Return the complex conjugate, with the imaginary component negated
 --- @return Complex
 function Complex:conjugate()
