@@ -84,8 +84,8 @@ end
 --- Represents tabular data with named columns.
 --- Allow modification like dt[1]["age"] = 30 and access like dt["age"]
 --- @class DataTable
---- @field headers  table        Array containing the column names
---- @field data     table        Array containing rows keyed by column names
+--- @field headers  table<string>       Array containing the column names
+--- @field data     table<table<any>>   Array containing rows keyed by column names
 local DataTable = {}
 DataTable.__index = function(self, key)
     local value = rawget(DataTable, key)
@@ -116,8 +116,8 @@ csv.DataTable = DataTable
 
 --- Creates a new DataTable.
 --- Rows are copied into the new table; individual row tables are not copied.
---- @param headers  table?  Array of column names
---- @param data     table?  Array of rows keyed by column names
+--- @param headers  table<string>?  Array of column names
+--- @param data     table<any>?     Array of rows keyed by column names
 --- @return DataTable
 function DataTable.new(headers, data)
     headers = headers or {}

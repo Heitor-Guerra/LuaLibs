@@ -2,7 +2,7 @@
 --- A container class that represents a Heap, a balanced binary-tree-like container whose root is the max value.
 --- The user might create the heap with a compare function, in which case it can decide how it works. If none is given,
 --- it will order the elements by the usage of >
---- @field private data table
+--- @field private data table<any>
 --- @field private _cmp? fun(a: any, b: any): boolean
 Heap = {}
 Heap.__index = function(self, key)

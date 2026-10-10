@@ -1,6 +1,6 @@
 --- @class Queue
 --- A container class that represents a Queue, a FIFO (first-in, first-out) data structure
---- @field private data table
+--- @field private data table<any>
 Queue = {}
 Queue.__index = function(self, key)
     if key == "data" then

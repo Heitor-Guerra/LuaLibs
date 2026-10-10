@@ -1,6 +1,6 @@
 --- @class Stack
 --- A container class that represents a Stack, a LIFO (last-in, first-out) data structure
---- @field private data table
+--- @field private data table<any>
 Stack = {}
 Stack.__index = function(self, key)
     if key == "data" then

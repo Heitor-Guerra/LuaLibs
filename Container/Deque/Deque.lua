@@ -1,6 +1,6 @@
 --- @class Deque
 --- A container class that represents a Deque, a double-ended queue data structure
---- @field private data table
+--- @field private data table<any>
 Deque = {}
 Deque.__index = function(self, key)
     if type(key) == "number" then
