@@ -8,10 +8,19 @@ local encodeTable = {}
 
 --------------------- Local Functions ---------------------
 
+--- Encodes a Lua number or boolean as a JSON primitive.
+--- Numbers are converted to their string representation, while
+--- booleans become `true` or `false`.
+--- @param data number|boolean  Value to encode.
+--- @return string
 local function encodeNumberBoolean(data)
     return tostring(data)
 end
 
+--- Encodes a Lua string as a JSON string, escaping special characters.
+--- The string `"null"` is treated as the JSON null literal.
+--- @param data string  String to encode.
+--- @return string
 local function encodeString(data)
     if data == "null" then
         return "null"
@@ -28,12 +37,17 @@ local function encodeString(data)
             ['\t'] = '\\t'
         }
 
-        return escapes[c] or string.format('\\u%04x', string.byte(c))
+        return escapes[c]
     end)
 
     return '"' .. data .. '"'
 end
 
+--- Encodes a Lua array-like table as a JSON array.
+--- Each element is encoded according to its Lua type using `encodeTable`.
+--- Nested non-empty tables are treated as arrays when their length is nonzero.
+--- @param data table    Array-like table to encode.
+--- @return string
 local function encodeArray(data)
     local result = {}
 
@@ -55,6 +69,11 @@ local function encodeArray(data)
     return "[" .. table.concat(result, ",\n") .. "]"
 end
 
+--- Encodes a Lua table as a JSON object.
+--- Each key is converted to a string and encoded as a JSON string.
+--- Each value is encoded according to its Lua type using `encodeTable`.
+--- @param data table    Table containing key-value pairs to encode.
+--- @return string
 local function encodeObject(data)
     local result = {}
 
@@ -87,14 +106,16 @@ encodeTable.table = encodeObject
 
 -----------------------------------------------------------
 
---- Function that converts a table to a json style string.
+--- Converts a Lua table into a JSON-formatted string.
+--- The root value is always encoded as a JSON object.
 --- @param data     table   Table containing the data to be saved
 --- @return string
 function json.format(data)
     return encodeObject(data)
 end
 
---- Function that writes a table as a .json file.
+--- Writes a Lua table to a file in JSON format.
+--- The filename must have the `.json` extension.
 --- @param data     table   Table containing the data to be saved
 --- @param filename string  String that represents the filename of json. Must end with .json
 function json.write(data, filename)
@@ -116,6 +137,11 @@ local decodeValue
 
 --------------------- Local Functions ---------------------
 
+--- Skips whitespace characters starting at the given position.
+--- Whitespace includes spaces, tabs, carriage returns, and newlines.
+--- @param str string   JSON string being parsed.
+--- @param pos integer  Starting position in the string.
+--- @return integer
 local function skipWhitespace(str, pos)
     while pos <= #str and str:sub(pos, pos):match("%s") do
         pos = pos + 1
@@ -124,6 +150,12 @@ local function skipWhitespace(str, pos)
     return pos
 end
 
+--- Decodes a JSON string, processing supported escape sequences.
+--- The opening quote must be at the specified position.
+--- @param str string   JSON string being parsed.
+--- @param pos integer  Position of the opening double quote.
+--- @return string
+--- @return integer
 local function decodeString(str, pos)
     pos = pos + 1
 
@@ -166,6 +198,12 @@ local function decodeString(str, pos)
     error("Unterminated JSON string")
 end
 
+--- Decodes a JSON number into a Lua number.
+--- Supports negative numbers, decimal fractions, and exponent notation.
+--- @param str string   JSON string being parsed.
+--- @param pos integer  Position where the number begins.
+--- @return number
+--- @return integer
 local function decodeNumber(str, pos)
     local remaining = str:sub(pos)
     local number = remaining:match("^-?%d+%.?%d*[eE]?[+-]?%d*")
@@ -183,6 +221,12 @@ local function decodeNumber(str, pos)
     return value, pos + #number
 end
 
+--- Decodes a JSON array into a Lua table.
+--- Elements are decoded recursively.
+--- @param str string    JSON string being parsed.
+--- @param pos integer   Position of the opening square bracket.
+--- @return table
+--- @return integer
 local function decodeArray(str, pos)
     local result = {}
     pos = skipWhitespace(str, pos + 1)
@@ -208,6 +252,12 @@ local function decodeArray(str, pos)
     end
 end
 
+--- Decodes a JSON object into a Lua table.
+--- Object keys must be JSON strings, and values are decoded recursively.
+--- @param str string    JSON string being parsed.
+--- @param pos integer   Position of the opening curly brace.
+--- @return table .
+--- @return integer
 local function decodeObject(str, pos)
     local result = {}
     pos = skipWhitespace(str, pos + 1)
