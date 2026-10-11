@@ -5,3 +5,11 @@ Files on PascalCase are class-focused, while files on camelCase are function-foc
 
 Done:
 - Temporal
+- Container
+- Math
+- Utils
+
+TODO:
+- Sql Connector
+- Http Client
+- Http Server
