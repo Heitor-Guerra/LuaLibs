@@ -2,13 +2,12 @@
 --- A class that represents a Logger, used to maintain information on how the system is working.
 --- @field logPath  string   Used to represent where the log should be written. Value can be overriden. Defaults to "./logs.log"
 --- @field minLevel LogLevel Used to represent the minumum level to capture. Levels lower than this will be ignored. Value can be overriden. Defaults to Logger.Level.DEBUG
-
 local Logger = {}
 Logger.__index = function(self, key)
     if key == "logPath" then
         return rawget(self, "_logPath")
     else
-        return rawget(self, key)
+        return rawget(Logger, key)
     end
 end
 
